@@ -40,7 +40,7 @@ python3 autodock_python.py -s all
 ```
 
 ## 3. Download typical directory structure for docking
-It creates a directory named Vina_Project and takes you in it.
+It creates a directory named ivina_project and takes you in it.
 ```
 python3 autodock_python.py -d all
 ```
@@ -52,7 +52,7 @@ python3 autodock_python.py -sc
 ```
 
 ## 5. Prepare protein receptor
-Now you will be in Vina_Project folder, here, put your receptor_xyz.pdb file in receptor folder to start.
+Now you will be in ivina_project folder, here, put your receptor_xyz.pdb file in receptor folder to start.
 ```
 python3 autodock_python.py -pp [receptor_name] / ["all"]
 ```
