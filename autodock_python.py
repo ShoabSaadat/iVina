@@ -32,6 +32,7 @@ def results(whichones, reclist):
         print ('Result files created...')
     elif whichones in reclist:
         subprocess.call(shlex.split(f'./results.sh {whichones}'))
+        print ('Result files created...')
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results or \ntype one of the following receptor names after -r argument: ')
         print(reclist)
@@ -227,6 +228,15 @@ def autodock(whichones, reclist):
             subprocess.call(shlex.split(f'./autodock.sh {receptor} {size_x} {size_y} {size_z} {center_x} {center_y} {center_z} {exhaustiveness}'))
         print ('Autodock Job done...')
     elif whichones in reclist:
+        alllines=[]
+        with open(f'grid_{whichones}.txt') as f:
+            alllines = [line.split() for line in f]
+        size_x = alllines[2][1]
+        size_y = alllines[2][2]
+        size_z = alllines[2][3]
+        center_x = alllines[3][1]
+        center_y = alllines[3][2]
+        center_z = alllines[3][3]
         subprocess.call(shlex.split(f'./autodock.sh {whichones} {size_x} {size_y} {size_z} {center_x} {center_y} {center_z} {exhaustiveness}'))
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results or \ntype one of the following receptor names after -ad argument: ')

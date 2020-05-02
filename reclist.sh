@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 for file in ./receptor/*.pdb;
-do if [ -f "$file" ]; then
+do
+if [ -f "$file" ]; then
 tmp=${file%.pdb};
 name="${tmp##*/}"; 
 echo $name >> reclist.txt
