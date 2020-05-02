@@ -31,7 +31,17 @@ sudo apt update
 sudo apt upgrade
 sudo apt install python3
 sudo apt install python3-pip
+sudo apt install pymol
 ```
+In case of pymol installation error try:
+```
+sudo apt-get install python python-dev python-pmw python-numpy freeglut3-dev libglew-dev libfreetype6-dev build-essential libxml++2.6-dev
+wget http://sourceforge.net/projects/pymol/files/latest/download -O pymol_source.tar.bz2
+mkdir -p ~/Softwares/Pymol/
+python setup.py build install --home=$prefix --install-lib=$modules --install-scripts=$prefix
+```
+
+In older linux distributions, pymol cannot be installed for python3. In that case you can run most of the following commands using autodock_python_safe.py file with python3 command.
 
 ## 2. Prepare the linux system using my python-tool
 Make sure you have autodock_python.py in the current folder
