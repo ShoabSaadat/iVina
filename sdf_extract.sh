@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 for file in ./receptor/*.pdb;
 do
 if [ -f "$file" ]; then
