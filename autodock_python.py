@@ -12,6 +12,23 @@ import webbrowser
 #subprocess.call(shlex.split('./test.sh param1 param2')) #reference it in sh as $1 onwards
 #subprocess.call(['./test.sh'])
 
+#------------------------------ New additions
+from shutil import copyfile, move
+from collections import defaultdict
+
+#------------------------------
+
+def getvalidvalidentry (entry, default):
+    try:
+        entry = int(entry)
+    except ValueError:
+        try:
+            entry = int(float(entry))
+        except ValueError:
+            entry = default
+            print(f"Your input is not a number. It's a string. We chose {default} instead..\n")
+    return entry
+
 def mkreclist(): #The list is made on present pdbs in receptor folder
     reclist = []
     subprocess.call(['./reclist.sh'])
@@ -24,19 +41,95 @@ def mkreclist(): #The list is made on present pdbs in receptor folder
                 file_out.write("%s\n" % item)
     return reclist
  
-def results(whichones, reclist):   
-    #Handle arguments --
+
+def get_top_list(receptor, topnumber):
+    resultslist = []
+    toplist = []
+    with open(f"./results_{receptor}/results_{receptor}.txt", 'r+') as f:
+        resultslist = [line[:-1].split() for line in f]
+
+    for ligand in range(1, topnumber+1):
+        ligname = resultslist[ligand][0].split('/')[-1][:-4]
+        ligpath = f'./outs_{receptor}/{ligname}_out.pdbqt'
+        ligaffinity = resultslist[ligand][2]
+        lignum = ligname.split('_')[-1]
+        toplist.append((ligname,ligpath,ligaffinity,lignum))
+    return toplist
+
+def results(whichones, reclist):
     if whichones == "all":
         for receptor in reclist:
             subprocess.call(shlex.split(f'./results.sh {receptor}'))
-        print ('Result files created...')
+        print ('Result files created. Now you can run resultscompile command using -rc flag.')
     elif whichones in reclist:
         subprocess.call(shlex.split(f'./results.sh {whichones}'))
-        print ('Result files created...')
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results or \ntype one of the following receptor names after -r argument: ')
         print(reclist)
-    
+
+def resultscompile(whichones, reclist):
+    topnumber = input("Please select how many top results (default=10) you want?: ")
+    topnumber = getvalidvalidentry(topnumber, 10)
+
+    if whichones == "all":
+        for receptor in reclist:    
+            try:
+                 #---------------------------
+                top_list = get_top_list(receptor, topnumber)
+                
+                chosenligsdir = f'./results_{receptor}/'
+                if not os.path.exists(chosenligsdir):
+                    os.makedirs(chosenligsdir)
+
+                n=0
+                for ligand in top_list:
+                    n += 1
+                    srcfile = ligand[0]
+                    srcpath = ligand[1]
+                    copyfile(srcpath,f'{chosenligsdir}{n}_{srcfile}_out.pdbqt')
+
+                #####
+                dollarlist = []
+                bynamelist = []
+                with open(f"./drugtable_bydollars.txt", 'r+') as f:
+                    dollarlist = [line[:-1].split() for line in f]
+                with open(f"./drugtable_byname.txt", 'r+') as f:
+                    bynamelist = [line[:-1].split() for line in f]
+
+                matchingdollardict=defaultdict(int)
+                for dollaritem in dollarlist:
+                    dollar_num = dollaritem[1]
+                    dollar_name = str(dollaritem[0].split('/')[-1][:-4])
+                    dollar_real_name = dollaritem[4]
+                    dollar_matching_name = dollar_name +"_"+ str(dollar_num)
+
+                    if dollar_matching_name in [item[0] for item in top_list]:
+                        matchingdollardict.update({dollar_matching_name: dollar_real_name})
+
+                matchingnamesdict=defaultdict(int)
+                for nameitem in bynamelist:
+                    dollar_num = nameitem[1]
+                    dollar_name = str(nameitem[0].split('/')[-1][:-4])
+                    dollar_real_name = nameitem[4]
+                    dollar_matching_name = dollar_name +"_"+ str(dollar_num)
+
+                    if dollar_matching_name in [item[0] for item in top_list]:
+                        matchingnamesdict.update({dollar_matching_name: dollar_real_name})
+                            
+                with open(f"{chosenligsdir}results_combined_{receptor}.txt", "w") as file_out:
+                    file_out.write("Num LocationName BindingAffinity(kcal/mol) DrugName DrugAlias\n")
+                    n = 0
+                    for item in top_list:
+                        n += 1
+                        file_out.write(f"{n} {item[0]} {item[2]} {matchingdollardict[item[0]]} {matchingnamesdict[item[0]]}\n")
+
+                copyfile(f'./receptor/{receptor}.pdbqt',f'{chosenligsdir}{receptor}.pdbqt')
+                print (f'Result files compiled for {receptor}. Find it in {chosenligsdir}...')      
+            except:
+                print("Something went wrong. Try running the results command with just -r flag first.")
+    else:
+        print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results to be compiled.')
+
 def drugtable(whichones):
     if whichones == "all":
         subprocess.call(['./drugtable.sh'])
@@ -90,14 +183,7 @@ Type here: '''
 
 def makegrid(whichones, reclist):
     extending = input("How wide the box extensions (Default is 5 angstroms) need to be?: ")
-    try:
-        extending = int(extending)
-    except ValueError:
-        try:
-            extending = int(float(extending))
-        except ValueError:
-            extending = 5
-            print("Your input is not a number. It's a string. We chose 5 angstrom for your receptor.\n")
+    extending = getvalidvalidentry(extending, 5)
 
     if whichones == "all":
         for receptor in reclist:
@@ -228,15 +314,6 @@ def autodock(whichones, reclist):
             subprocess.call(shlex.split(f'./autodock.sh {receptor} {size_x} {size_y} {size_z} {center_x} {center_y} {center_z} {exhaustiveness}'))
         print ('Autodock Job done...')
     elif whichones in reclist:
-        alllines=[]
-        with open(f'grid_{whichones}.txt') as f:
-            alllines = [line.split() for line in f]
-        size_x = alllines[2][1]
-        size_y = alllines[2][2]
-        size_z = alllines[2][3]
-        center_x = alllines[3][1]
-        center_y = alllines[3][2]
-        center_z = alllines[3][3]
         subprocess.call(shlex.split(f'./autodock.sh {whichones} {size_x} {size_y} {size_z} {center_x} {center_y} {center_z} {exhaustiveness}'))
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results or \ntype one of the following receptor names after -ad argument: ')
@@ -290,6 +367,10 @@ parser.add_argument('-r',
 					'--results',
 					nargs='+',
 					help='Create results files')
+parser.add_argument('-rc',
+					'--resultscompile',
+					nargs='+',
+					help='Compile all results')
 parser.add_argument('-dt',
 					'--drugtable',
 					nargs='+',
@@ -332,6 +413,9 @@ def main():
 	if args.results:
 		reclist = mkreclist()
 		results(sys.argv[2], reclist)
+	elif args.resultscompile:
+		reclist = mkreclist()
+		resultscompile(sys.argv[2], reclist)
 	elif args.drugtable:
 		drugtable(sys.argv[2])
 	elif args.mkpdbqts:

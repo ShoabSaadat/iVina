@@ -122,9 +122,14 @@ python3 autodock_python.py -ad [receptor_name] / ["all"]
 ```
 
 ## 9. Create result files
-It creates a results file for each receptor with finalized info
+It creates: 
+- A results file for each receptor with finalized info (using -r flag)
+- Chosen ligands are put into results_receptor folder with n number of ligands (using -rc flag) n is provided by you. A final combined results fle is also created.
+
+Use in the same order as provided.
 ```
 python3 autodock_python.py -r [receptor_name] / ["all"]
+python3 autodock_python.py -rc [receptor_name] / ["all"]
 ```
 
 ## 10. Make lookup drug table files
