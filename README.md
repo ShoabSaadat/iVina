@@ -124,7 +124,7 @@ python3 autodock_python.py -ad [receptor_name] / ["all"]
 ## 9. Create result files
 It creates: 
 - A results file for each receptor with finalized info (using -r flag)
-- Chosen ligands are put into results_receptor folder with n number of ligands (using -rc flag) n is provided by you. A final combined results fle is also created.
+- Chosen ligands are put into results_receptor folder with n number of ligands (using -rc flag) n is provided by you. A final combined results fle is also created along with a chosen ligands sdf file in the order of binding affinity.
 
 Use in the same order as provided.
 ```

@@ -128,6 +128,9 @@ def resultscompile(whichones, reclist):
                 print (f'Result files compiled for {receptor}. Find it in {chosenligsdir}...')      
             except:
                 print("Something went wrong. Try running the results command with just -r flag first.")
+                
+        #Extract SDFs as well
+        subprocess.call(shlex.split(f'./sdf_extract.sh {receptor}'))
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results to be compiled.')
 
