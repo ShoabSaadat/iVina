@@ -6,7 +6,7 @@ tmp=${file%.sdf};
 name="${tmp##*/}"; 
 
 if [ -f $HOME/mgltools/bin/pythonsh ] && [ $1 == 2 ]; then
-obabel $file -O ./ligands_pdbqts/${name}_.pdb -m --unique;
+obabel -isdf $file -opdb -O ./ligands_pdbqts/${name}_.pdb -p --gen3d -m --unique;
 for pdbligand in ./ligands_pdbqts/*.pdb
 do
 tmp2=${pdbligand%.pdb}; 
@@ -17,7 +17,8 @@ done;
 rm $(ls ./ligands_pdbqts/*.pdb)
 
 elif [ $1 == 1 ]; then
-obabel $file -O ./ligands_pdbqts/${name}_.pdbqt -m --unique;
+#obabel $file -O ./ligands_pdbqts/${name}_.pdbqt -m --unique;
+obabel -isdf $file -opdbqt -O ./ligands_pdbqts/${name}_.pdbqt -p --gen3d -m --unique;
 
 else
 echo "Incorrect input. Please choose 1 or 2 as options"

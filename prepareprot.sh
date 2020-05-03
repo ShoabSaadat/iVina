@@ -20,7 +20,8 @@ echo "Using Open Babel to process the receptor."
 if [ -f /usr/bin/obabel ]; then
 echo "Finding openbabel..."
 alias obabel="/usr/bin/obabel" #Just resetting obabel alias just in case
-/usr/bin/obabel ./receptor/$1.pdb -xhn -O ./receptor/$1.pdbqt;
+#/usr/bin/obabel -ipdb ./receptor/$1.pdb -opdbqt -O ./receptor/$1.pdbqt -xhn -p --gen3d;
+/usr/bin/obabel -ipdb ./receptor/$1.pdb -opdbqt -O ./receptor/$1.pdbqt -xhn;
 else
 echo "Sorry. No openbabel installation found on this system. Install that first."
 fi
