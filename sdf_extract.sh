@@ -15,6 +15,7 @@ done;
 ls ./results_$name/*_out*.sdf | grep -v out1 | xargs rm
 obabel ./results_$name/*.pdbqt -O ./results_$name/${name}_all_ligands.sdf
 ls ./results_$name/*_out*.sdf | grep out1 | xargs rm
+ls ./results_$name/*1.sdf | xargs rm
 else
 echo "No pdb files in receptor folder"
 fi;
