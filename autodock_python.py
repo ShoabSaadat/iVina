@@ -130,6 +130,7 @@ def resultscompile(whichones, reclist):
                 
         #Extract SDFs as well
         subprocess.call(shlex.split(f'./sdf_extract.sh {receptor}'))
+        print (f'\nResult files compiled for all receptors... Job complete.\n')
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results to be compiled.')
 
