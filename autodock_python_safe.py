@@ -127,7 +127,7 @@ def resultscompile(whichones, reclist):
                 copyfile(f'./receptor/{receptor}.pdbqt',f'{chosenligsdir}{receptor}.pdbqt')
                 print (f'Result files compiled for {receptor}. Find it in {chosenligsdir}...')      
             except:
-                print("Something went wrong. Try running the results command with just -r flag first.")
+                print("Something went wrong. Try running the results command with just -r flag first then -dt to make drug tables.")
                 
         #Extract SDFs as well
         subprocess.call(shlex.split(f'./sdf_extract.sh {receptor}'))

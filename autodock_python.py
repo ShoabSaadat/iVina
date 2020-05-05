@@ -41,7 +41,6 @@ def mkreclist(): #The list is made on present pdbs in receptor folder
                 file_out.write("%s\n" % item)
     return reclist
  
-
 def get_top_list(receptor, topnumber):
     resultslist = []
     toplist = []
@@ -126,11 +125,11 @@ def resultscompile(whichones, reclist):
                 copyfile(f'./receptor/{receptor}.pdbqt',f'{chosenligsdir}{receptor}.pdbqt')
                 print (f'Result files compiled for {receptor}. Find it in {chosenligsdir}...')      
             except:
-                print("Something went wrong. Try running the results command with just -r flag first.")
+                print("Something went wrong. Try running the results command with just -r flag first then -dt to make drug tables.")
                 
         #Extract SDFs as well
         subprocess.call(shlex.split(f'./sdf_extract.sh {receptor}'))
-        print (f'\nResult files compiled for all receptors... Job complete.\n')
+        print (f'\nResult files compiled for all receptors... FInd them in the results folder.\n')
     else:
         print ('You have not provided correct receptor name. \nEnter "all" as an argument for all receptor results to be compiled.')
 

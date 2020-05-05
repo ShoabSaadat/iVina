@@ -1,4 +1,4 @@
 -------- AutoDock Grid Map for receptor_VP1 --------
 spacing 0.375 # spacing (A)
-npts 95.488 96.160 44.125
-gridcenter 498.895 449.029 306.923
+npts 56.837 42.675 42.021
+gridcenter 459.403 464.559 306.413

@@ -121,7 +121,13 @@ It does it for any pdbqt receptor in receptor folder and all ligand pdbqts in li
 python3 autodock_python.py -ad [receptor_name] / ["all"]
 ```
 
-## 9. Create result files
+## 9. Make lookup drug table files
+It creates three kinds of drugtables to compare results with actual ligand details
+```
+python3 autodock_python.py -dt [receptor_name] / ["all"]
+```
+
+## 10. Create result files
 It creates: 
 - A results file for each receptor with finalized info (using -r flag)
 - Chosen ligands are put into results_receptor folder with n number of ligands (using -rc flag) n is provided by you. A final combined results fle is also created along with a chosen ligands sdf file in the order of binding affinity.
@@ -131,11 +137,6 @@ Use in the same order as provided.
 python3 autodock_python.py -r [receptor_name] / ["all"]
 python3 autodock_python.py -rc [receptor_name] / ["all"]
 ```
-
-## 10. Make lookup drug table files
-It creates three kinds of drugtables to compare results with actual ligand details
-```
-python3 autodock_python.py -dt [receptor_name] / ["all"]
-```
+If the command fails, try running -dt and -r flags first.
 
 Note: With each command, you can use all or a certain receptor name. At any time if you want to know the receptor names for more targetted commands, type python3 autodock_python.py -i
